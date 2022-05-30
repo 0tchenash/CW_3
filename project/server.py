@@ -2,7 +2,6 @@ from flask import Flask
 from flask_cors import CORS
 from flask_restx import Api
 
-
 from project.config import DevelopmentConfig, BaseConfig
 from project.setup_db import db
 from project.views import genres_ns, movies_ns, directors_ns, users_ns, auth_ns
@@ -25,7 +24,8 @@ def create_app(config_obj):
 
     cors.init_app(app)
     db.init_app(app)
-    api.init_app(app)
+    #api.init_app(app)
+    api = Api(app)
 
     # Регистрация эндпоинтов
     api.add_namespace(genres_ns)
@@ -37,5 +37,6 @@ def create_app(config_obj):
     return app
 
 if __name__ == '__main__':
+
     app = create_app(DevelopmentConfig())
     app.run(debug=True, port=10001)

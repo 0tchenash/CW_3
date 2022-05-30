@@ -12,8 +12,17 @@ class MovieService(BaseService):
             raise ItemNotFound
         return MovieSchema().dump(movie)
 
-    def get_all(self, filters):
-        if filters.get("director_id") is not None:
+    def get_all(self, filters, page, status):
+        if status is not None:
+            if status == 'new':
+                movies = MovieDAO(self._db_session).get_all_sorted_desc()
+            if status == 'old':
+                movies = MovieDAO(self._db_session).get_all_sorted_asc()
+        elif page is not None:
+            lim = 12
+            offs = (int(page) - 1) * lim
+            movies = MovieDAO(self._db_session).get_all_page(lim, offs)
+        elif filters.get("director_id") is not None:
             movies = MovieDAO(self._db_session).get_by_director_id(filters.get("director_id"))
         elif filters.get("genre_id") is not None:
             movies = MovieDAO(self._db_session).get_by_genre_id(filters.get("genre_id"))
@@ -22,6 +31,7 @@ class MovieService(BaseService):
         else:
             movies = MovieDAO(self._db_session).get_all()
         return MovieSchema(many=True).dump(movies)
+
 
     def create(self, data):
         return MovieDAO(self._db_session).create(data)

@@ -11,18 +11,18 @@ class AuthService:
     def __init__(self, user_service: UserService):
         self.user_service = user_service
 
-    def generate_token(self, username, password, is_refresh=False):
+    def generate_token(self, email, password, is_refresh=False):
         """Создание токена на основе данных пользователя"""
-        user = self.user_service.get_by_username(username)
+        user = self.user_service.get_by_useremail(email)
 
         if user is None:
             raise abort(404)
 
-        if not self.user_service.compare_password(user.password, password):
-            abort(400)
+        # if not self.user_service.compare_password(user.password, password):
+        #     abort(400)
 
         data = {
-            "username": user.username,
+            "email": user.email,
             "role": user.role
         }
 
@@ -43,6 +43,6 @@ class AuthService:
     def approve_refresh_token(self, refresh_token):
         """Обновление токена с помощью (refresh_token)"""
         data = jwt.decode(jwt=refresh_token, key=BaseConfig.SECRET_KEY, algorithms=BaseConfig.JWT_ALGORITHM)
-        username = data.get('username')
+        email = data.get('email')
 
-        return self.generate_token(username, None)
+        return self.generate_token(email, None)

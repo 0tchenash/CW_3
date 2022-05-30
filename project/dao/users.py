@@ -1,10 +1,10 @@
-from sqlalchemy.orm.scoping import scoped_session
+
 
 from project.dao.models import User
 
 
 class UserDAO:
-    def __init__(self, session: scoped_session):
+    def __init__(self, session):
         self.session = session
 
     def get_all(self):
@@ -27,6 +27,6 @@ class UserDAO:
         self.session.delete(user)
         self.session.commit()
 
-    def get_by_username(self, name):
+    def get_by_useremail(self, email):
         """Получение определенного пользователя с его данными"""
-        return self.session.query(User).filter(User.username == name).first()
+        return self.session.query(User).filter(User.email == email).first()

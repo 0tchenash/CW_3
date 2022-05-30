@@ -4,23 +4,27 @@ from project.exceptions import ItemNotFound
 
 from project.services import MovieService
 from project.setup_db import db
+from project.tools.decorators import auth_required
 
 movies_ns = Namespace('movies')
 
 
 @movies_ns.route('/')
 class MoviesView(Resource):
+    @auth_required
     @movies_ns.response(200, "OK")
     def get(self):
         director = request.args.get("director_id")
         genre = request.args.get("genre_id")
         year = request.args.get("year")
+        page = request.args.get('page')
+        status = request.args.get('status')
         filters = {
             "director_id": director,
             "genre_id": genre,
             "year": year,
         }
-        return MovieService(db.session).get_all(filters)
+        return MovieService(db.session).get_all(filters, page, status)
 
     @movies_ns.response(201, "CREATED")
     def post(self):

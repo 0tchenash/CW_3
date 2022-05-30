@@ -5,27 +5,29 @@ from project.dao import UserDAO
 from project.config import BaseConfig
 from project.exceptions import ItemNotFound
 from project.schemas.users import UserSchema
-from project.services.base import BaseService
 
 
-class UserService(BaseService):
+
+class UserService:
+    def __init__(self, dao: UserDAO):
+        self.dao = dao
 
     def get_all(self):
-        users = UserDAO(self._db_session).get_all()
+        users = self.dao.get_all()
         return UserSchema(many=True).dump(users)
 
-    def get_by_username(self, name):
-        user = UserDAO(self._db_session).get_by_username(name)
+    def get_by_useremail(self, email):
+        user = self.dao.get_by_useremail(email)
         if not user:
             raise ItemNotFound
         return UserSchema().dump(user)
 
     def create(self, data):
         data['password'] = self.generete_password(data['password'])
-        return UserDAO(self._db_session).create(data)
+        return self.dao.create(data)
 
     def delete(self, user_id):
-        return UserDAO(self._db_session).delete(user_id)
+        return self.dao.delete(user_id)
 
     def generete_password(self, password):
         """хэширование пароля"""
