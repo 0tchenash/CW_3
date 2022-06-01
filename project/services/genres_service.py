@@ -4,23 +4,26 @@ from project.schemas.genres import GenreSchema
 from project.services.base import BaseService
 
 
-class GenresService(BaseService):
+class GenresService:
+    def __init__(self, dao):
+        self.dao = dao
+
     def get_one(self, genre_id):
-        genre = GenreDAO(self._db_session).get_one(genre_id)
+        genre = self.dao.get_one(genre_id)
         if not genre:
             raise ItemNotFound
         return GenreSchema().dump(genre)
 
     def get_all(self):
-        genres = GenreDAO(self._db_session).get_all()
+        genres = self.dao.get_all()
         return GenreSchema(many=True).dump(genres)
 
     def create(self, data):
-        return GenreDAO(self._db_session).create(data)
+        return self.dao.create(data)
 
     def update(self, data):
-        GenreDAO(self._db_session).update(data)
-        return GenreDAO(self._db_session)
+        self.dao.update(data)
+
 
     def delete(self, genre_id):
-        GenreDAO(self._db_session).delete(genre_id)
+        self.dao.delete(genre_id)

@@ -1,10 +1,10 @@
-from sqlalchemy.orm.scoping import scoped_session
+
 
 from project.dao.models import Director
 
 
 class DirectorDAO:
-    def __init__(self, session: scoped_session):
+    def __init__(self, session):
         self.session = session
 
     def get_one(self, director_id):

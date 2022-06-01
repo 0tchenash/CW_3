@@ -4,23 +4,26 @@ from project.schemas.directors import DirectorSchema
 from project.services.base import BaseService
 
 
-class DirectorsService(BaseService):
+class DirectorsService:
+    def __init__(self, dao):
+        self.dao = dao
+
     def get_one(self, director_id):
-        director = DirectorDAO(self._db_session).get_one(director_id)
+        director = self.dao.get_one(director_id)
         if not director:
             raise ItemNotFound
         return DirectorSchema().dump(director)
 
     def get_all(self):
-        directors = DirectorDAO(self._db_session).get_all()
+        directors = self.dao.get_all()
         return DirectorSchema(many=True).dump(directors)
 
     def create(self, data):
-        return DirectorDAO(self._db_session).create(data)
+        return self.dao.create(data)
 
     def update(self, data):
-        DirectorDAO(self._db_session).update(data)
-        return DirectorDAO(self._db_session)
+        self.dao.update(data)
+
 
     def delete(self, director_id):
-        DirectorDAO(self._db_session).delete(director_id)
+        self.dao.delete(director_id)

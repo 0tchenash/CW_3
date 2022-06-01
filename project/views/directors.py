@@ -2,8 +2,8 @@ from flask import request
 from flask_restx import abort, Namespace, Resource
 
 from project.exceptions import ItemNotFound
-from project.services import DirectorsService
-from project.setup_db import db
+from project.tools.container import director_service
+
 
 directors_ns = Namespace("directors")
 
@@ -13,12 +13,12 @@ class DirectorsView(Resource):
     @directors_ns.response(200, "OK")
     def get(self):
         """Получение всех режиссеров"""
-        return DirectorsService(db.session).get_all()
+        return director_service.get_all()
 
     @directors_ns.response(201, "CREATED")
     def post(self):
         data = request.get_json
-        DirectorsService(db.session).create(data)
+        director_service.create(data)
 
 
 @directors_ns.route("/<int:genre_id>")
@@ -28,7 +28,7 @@ class DirectorView(Resource):
     def get(self, genre_id: int):
         """Полуние режиссера по айди"""
         try:
-            return DirectorsService(db.session).get_one(genre_id)
+            return director_service.get_one(genre_id)
         except ItemNotFound:
             abort(404, message="Director not found")
 
@@ -39,7 +39,7 @@ class DirectorView(Resource):
         data = request.get_json()
         data['id'] = gid
         try:
-            return DirectorsService(db.session).update(data)
+            return director_service.update(data)
         except ItemNotFound:
             abort(404, message="Director not found")
 
@@ -48,6 +48,6 @@ class DirectorView(Resource):
     def delete(self, gid):
         """Удаление режиссера по айди"""
         try:
-            return DirectorsService(db.session).delete(gid)
+            return director_service.delete(gid)
         except ItemNotFound:
             abort(404, message="Director not found")

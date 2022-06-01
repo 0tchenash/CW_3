@@ -7,3 +7,4 @@ class UserSchema(Schema):
     name = fields.Str(required=True)
     surname = fields.Str(required=True)
     favorite_genre = fields.Str(required=True)
+    role = fields.Str(required=True)

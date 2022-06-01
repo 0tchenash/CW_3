@@ -14,7 +14,7 @@ class AuthService:
     def generate_token(self, email, password, is_refresh=False):
         """Создание токена на основе данных пользователя"""
         user = self.user_service.get_by_useremail(email)
-
+        print(user)
         if user is None:
             raise abort(404)
 
@@ -22,8 +22,8 @@ class AuthService:
         #     abort(400)
 
         data = {
-            "email": user.email,
-            "role": user.role
+            'name': user['name'],
+            'role': user['role']
         }
 
         # Выдача токена на определенное время

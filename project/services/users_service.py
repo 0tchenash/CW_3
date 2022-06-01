@@ -16,6 +16,10 @@ class UserService:
         users = self.dao.get_all()
         return UserSchema(many=True).dump(users)
 
+    def get_one(self, user_id):
+        user = self.dao.get_one(user_id)
+        return UserSchema().dump(user)
+
     def get_by_useremail(self, email):
         user = self.dao.get_by_useremail(email)
         if not user:
@@ -25,6 +29,9 @@ class UserService:
     def create(self, data):
         data['password'] = self.generete_password(data['password'])
         return self.dao.create(data)
+
+    def update(self, data):
+        self.dao.update(data)
 
     def delete(self, user_id):
         return self.dao.delete(user_id)

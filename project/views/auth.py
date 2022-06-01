@@ -1,8 +1,8 @@
 from flask import request
 
 from flask_restx import Namespace, Resource
-from project.services import AuthService, UserService
-from project.setup_db import db
+from project.tools.container import auth_service, user_service
+
 
 auth_ns = Namespace("auth")
 
@@ -13,7 +13,7 @@ class AuthsView(Resource):
     def post(self):
         """регистрация пользователя"""
         data = request.get_json()
-        UserService(db.session).create(data)
+        user_service.create(data)
 
 
 @auth_ns.route('/login/')
@@ -26,7 +26,7 @@ class AuthsView(Resource):
         if None in [email, password]:
             return "", 400
 
-        token = AuthService(db.session).generate_token(email, password)
+        token = auth_service.generate_token(email, password)
         return token
 
     def put(self):
@@ -34,6 +34,6 @@ class AuthsView(Resource):
         data = request.get_json()
         token = data.get('refresh_token')
 
-        tokens = AuthService(db.session).approve_refresh_token(token)
+        tokens = auth_service.approve_refresh_token(token)
 
         return tokens, 201
