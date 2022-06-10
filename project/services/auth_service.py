@@ -1,6 +1,7 @@
 import datetime
 import calendar
 import jwt
+from flask import request
 
 from flask_restx import abort
 from project.config import BaseConfig
@@ -22,8 +23,9 @@ class AuthService:
         #     abort(400)
 
         data = {
-            'name': user['name'],
-            'role': user['role']
+            'email': user['email'],
+            'role': user['role'],
+            'password': user['password']
         }
 
         # Выдача токена на определенное время
@@ -46,3 +48,12 @@ class AuthService:
         email = data.get('email')
 
         return self.generate_token(email, None)
+
+    def decode_token(self, token):
+        data = jwt.decode(jwt=token, key=BaseConfig.SECRET_KEY, algorithms=BaseConfig.JWT_ALGORITHM)
+        return data
+
+    def get_token(self):
+        data = request.headers['Authorization']
+        token = data.split('Bearer ')[-1]
+        return self.decode_token(token)

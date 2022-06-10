@@ -9,7 +9,7 @@ auth_ns = Namespace("auth")
 
 @auth_ns.route('/register/')
 class AuthsView(Resource):
-
+    @auth_ns.response(201, "CREATED")
     def post(self):
         """регистрация пользователя"""
         data = request.get_json()

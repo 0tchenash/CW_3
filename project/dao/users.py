@@ -30,8 +30,6 @@ class UserDAO:
         user.surname = data.get("surname")
         user.favorite_genre = data.get("favorite_genre")
 
-
-
     def delete(self, user_id):
         """Удаление пользователя"""
         user = self.session.query(User).get(user_id)
@@ -42,3 +40,8 @@ class UserDAO:
     def get_by_useremail(self, email):
         """Получение определенного пользователя с его данными"""
         return self.session.query(User).filter(User.email == email).first()
+
+    def update_password(self, email, new_password):
+        user = self.session.query(User).filter(User.email == email).first()
+        user.password = new_password
+        self.session.commit()

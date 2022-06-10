@@ -7,7 +7,6 @@ from project.exceptions import ItemNotFound
 from project.schemas.users import UserSchema
 
 
-
 class UserService:
     def __init__(self, dao: UserDAO):
         self.dao = dao
@@ -27,7 +26,7 @@ class UserService:
         return UserSchema().dump(user)
 
     def create(self, data):
-        data['password'] = self.generete_password(data['password'])
+        data['password'] = self.generate_password(data['password'])
         return self.dao.create(data)
 
     def update(self, data):
@@ -36,7 +35,7 @@ class UserService:
     def delete(self, user_id):
         return self.dao.delete(user_id)
 
-    def generete_password(self, password):
+    def generate_password(self, password):
         """хэширование пароля"""
         hash_pass = hashlib.pbkdf2_hmac(
             'sha256',
@@ -48,7 +47,6 @@ class UserService:
     def compare_password(self, hash_password, password):
         """Проверка пароля"""
         decoded_password = base64.b64decode(hash_password)
-
         hash_digest = hashlib.pbkdf2_hmac(
             'sha256',
             password.encode('utf-8'),
@@ -56,3 +54,12 @@ class UserService:
             BaseConfig.PWD_HASH_ITERATIONS)
 
         return hmac.compare_digest(decoded_password, hash_digest)
+
+    def change_password(self, data, token):
+        new_password = self.generate_password(data["new_password"])
+        password = data['password']
+        email = token['email']
+
+        if self.compare_password(token["password"], password):
+            return self.dao.update_password(email, new_password)
+
