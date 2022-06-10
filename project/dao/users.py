@@ -24,7 +24,7 @@ class UserDAO:
 
         return user
 
-    def update(self, data):
+    def update(self, data, token):
         user = self.get_one(data.get("id"))
         user.name = data.get("name")
         user.surname = data.get("surname")

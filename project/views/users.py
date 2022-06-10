@@ -32,12 +32,14 @@ class UserView(Resource):
 
     @user_ns.response(200, "OK")
     @user_ns.response(404, "User not found")
-    def patch(self, user_id):
+    def patch(self):
         req_json = request.json
+        data = auth_service.get_token()
+
         if "id" not in req_json:
             req_json["id"] = user_id
         try:
-            return user_service.update(req_json)
+            return user_service.update(req_json, data)
         except ItemNotFound:
             abort(404, message="User not found")
 
@@ -48,10 +50,14 @@ class UserView(Resource):
     @user_ns.response(404, "User not found")
     @auth_required
     def put(self):
-        data = request.get_json()
-        token = auth_service.get_token()
-        user_service.change_password(data, token)
-        return "Пароль изменен", 201
+        try:
+            data = request.get_json()
+            token = auth_service.get_token()
+            user_service.change_password(data, token)
+            return "Пароль изменен", 201
+        except ItemNotFound:
+            abort(404, message="User not found")
+
 
     @user_ns.response(200, "OK")
     @user_ns.response(404, "User not found")

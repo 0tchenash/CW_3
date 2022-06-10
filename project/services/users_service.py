@@ -29,7 +29,8 @@ class UserService:
         data['password'] = self.generate_password(data['password'])
         return self.dao.create(data)
 
-    def update(self, data):
+    def update(self, data, token):
+
         self.dao.update(data)
 
     def delete(self, user_id):
