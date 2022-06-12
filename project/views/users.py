@@ -1,6 +1,7 @@
 from flask import request
 from flask_restx import Resource, Namespace, abort
 from project.exceptions import ItemNotFound
+from project.schemas.users import UserSchema
 
 from project.tools.container import user_service, auth_service
 from project.tools.decorators import auth_required, admin_required
@@ -11,6 +12,7 @@ user_ns = Namespace('user')
 
 @users_ns.route('/')
 class UsersView(Resource):
+    @admin_required
     @users_ns.response(200, "OK")
     def get(self):
         """Получение всех зарегистрированных пользователей"""
@@ -26,20 +28,18 @@ class UserView(Resource):
         try:
             data = auth_service.get_token()
             user = user_service.get_by_useremail(data['email'])
-            return user
+            return UserSchema().dump(user)
         except ItemNotFound:
             abort(404, message="User not found")
 
+    @auth_required
     @user_ns.response(200, "OK")
     @user_ns.response(404, "User not found")
     def patch(self):
-        req_json = request.json
-        data = auth_service.get_token()
-
-        if "id" not in req_json:
-            req_json["id"] = user_id
+        data = request.json
+        token = auth_service.get_token()
         try:
-            return user_service.update(req_json, data)
+            return user_service.update(data, token)
         except ItemNotFound:
             abort(404, message="User not found")
 
@@ -59,6 +59,9 @@ class UserView(Resource):
             abort(404, message="User not found")
 
 
+@user_ns.route('/delete/<int:uid>')
+class UserDelete(Resource):
+    @admin_required
     @user_ns.response(200, "OK")
     @user_ns.response(404, "User not found")
     def delete(self, user_id):

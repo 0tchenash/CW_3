@@ -1,6 +1,8 @@
 from flask import request
 
 from flask_restx import Namespace, Resource
+
+from project.config import Constants
 from project.tools.container import auth_service, user_service
 
 
@@ -13,7 +15,13 @@ class AuthsView(Resource):
     def post(self):
         """регистрация пользователя"""
         data = request.get_json()
-        user_service.create(data)
+        if data['email'].split('@')[-1] in Constants.ALLOWED_DOMENS:
+            if data['password'] not in Constants.UNALLOWED_PASSWORDS and len(data['password']) >= 4:
+                user_service.create(data)
+            else:
+                return 'Пароль не соответствует условиям', 400
+        else:
+            return 'Недопустимый email', 400
 
 
 @auth_ns.route('/login/')

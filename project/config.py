@@ -33,3 +33,7 @@ class DevelopmentConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(
         os.path.dirname(BASEDIR), "project.db"
     )
+
+class Constants():
+    ALLOWED_DOMENS = ['gmail.com', 'mail.ru', 'bk.ru', 'yandex.ru', 'icloud.com', 'skypro.ru', 'inbox.ru']
+    UNALLOWED_PASSWORDS = ['1234', 'qwer', '1111', '0000']

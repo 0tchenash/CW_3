@@ -24,11 +24,9 @@ class UserDAO:
 
         return user
 
-    def update(self, data, token):
-        user = self.get_one(data.get("id"))
-        user.name = data.get("name")
-        user.surname = data.get("surname")
-        user.favorite_genre = data.get("favorite_genre")
+    def update(self, user):
+        self.session.add(user)
+        self.session.commit()
 
     def delete(self, user_id):
         """Удаление пользователя"""

@@ -23,15 +23,21 @@ class UserService:
         user = self.dao.get_by_useremail(email)
         if not user:
             raise ItemNotFound
-        return UserSchema().dump(user)
+        return user
 
     def create(self, data):
         data['password'] = self.generate_password(data['password'])
         return self.dao.create(data)
 
     def update(self, data, token):
-
-        self.dao.update(data)
+        user = self.get_by_useremail(token['email'])
+        if data['name']:
+            user.name = data["name"]
+        elif data['surname']:
+            user.surname = data.get("surname")
+        elif data['favorite_genre']:
+            user.favorite_genre = data.get("favorite_genre")
+        return self.dao.update(user)
 
     def delete(self, user_id):
         return self.dao.delete(user_id)
