@@ -23,9 +23,9 @@ class AuthService:
         #     abort(400)
 
         data = {
-            'email': user['email'],
-            'role': user['role'],
-            'password': user['password']
+            'email': user.email,
+            'role': user.role,
+            'password': str(user.password)
         }
 
         # Выдача токена на определенное время

@@ -5,6 +5,7 @@ from flask_restx import Api
 from project.config import DevelopmentConfig, BaseConfig
 from project.setup_db import db
 from project.views import genres_ns, movies_ns, directors_ns, users_ns, auth_ns
+from project.views.favorite import favorite_ns
 from project.views.users import user_ns
 
 api = Api(
@@ -35,6 +36,7 @@ def create_app(config_obj):
     api.add_namespace(users_ns)
     api.add_namespace(user_ns)
     api.add_namespace(auth_ns)
+    api.add_namespace(favorite_ns)
 
     return app
 
