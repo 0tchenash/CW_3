@@ -24,6 +24,5 @@ class GenresService:
     def update(self, data):
         self.dao.update(data)
 
-
     def delete(self, genre_id):
         self.dao.delete(genre_id)

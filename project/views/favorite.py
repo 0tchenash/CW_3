@@ -16,3 +16,11 @@ class FavoriteView(Resource):
         user = user_service.get_by_useremail(data['email'])
         favorite_service.add_movie(mid, user)
         return "Фильм добавлен в избранное!", 200
+
+    @auth_required
+    def delete(self, mid):
+        data = auth_service.get_token()
+        user = user_service.get_by_useremail(data['email'])
+        favorite_service.delete(mid, user)
+        return "Фильм удален из избранного!", 204
+

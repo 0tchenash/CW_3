@@ -14,3 +14,8 @@ class FavoriteDAO:
         favorite = Favorite(**data)
         db.session.add(favorite)
         db.session.commit()
+
+    def delete(self, movie_id, user):
+        movie = self.session.query(Favorite).filter(Favorite.movie_id == movie_id and Favorite.user_id == user.id)
+        db.session.delete(movie)
+        db.session.commit()
