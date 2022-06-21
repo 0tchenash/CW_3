@@ -4,7 +4,7 @@ from project.schemas.genres import GenreSchema
 from project.services.base import BaseService
 
 
-class GenresService:
+class GenresService():
     def __init__(self, dao):
         self.dao = dao
 

@@ -1,6 +1,6 @@
-
+from sqlalchemy.orm.scoping import scoped_session
 
 
 class BaseService:
-    def __init__(self, session):
-        self._db_session = session
+    def __init__(self, session: scoped_session):
+        self.dao = session
