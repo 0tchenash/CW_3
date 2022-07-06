@@ -32,14 +32,7 @@ def create_app(config_obj):
     api.add_namespace(genres_ns)
     api.add_namespace(movies_ns)
     api.add_namespace(directors_ns)
-    api.add_namespace(users_ns)
     api.add_namespace(user_ns)
-    api.add_namespace(auth_ns)
-    api.add_namespace(favorite_ns)
 
     return app
 
-
-if __name__ == '__main__':
-    app = create_app(DevelopmentConfig())
-    app.run(debug=True, port=10331)
