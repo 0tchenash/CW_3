@@ -23,16 +23,14 @@ class BaseConfig:
 class TestingConfig(BaseConfig):
     TESTING = True
     SQLALCHEMY_ECHO = True
-    SQLALCHEMY_DATABASE_URI = "sqlite:///project.db"
+    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://postgres:postgres@localhost:5432/postgres"
 
 
 class DevelopmentConfig(BaseConfig):
     RESTX_JSON = {'ensure_ascii': False, 'indent': 4}
     DEBUG = True
     SQLALCHEMY_ECHO = True
-    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(
-        os.path.dirname(BASEDIR), "project.db"
-    )
+    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://postgres:postgres@localhost:5432/postgres"
 
 class Constants():
     ALLOWED_DOMENS = ['gmail.com', 'mail.ru', 'bk.ru', 'yandex.ru', 'icloud.com', 'skypro.ru', 'inbox.ru']

@@ -23,6 +23,16 @@ with app.app_context():
         print("Fixtures already loaded")
 
 with app.app_context():
+    for director in data["directors"]:
+        db.session.add(Director(id=director["pk"], name=director["name"]))
+
+    try:
+        db.session.commit()
+    except IntegrityError:
+        print("Fixtures already loaded")
+
+
+with app.app_context():
     for movie in data["movies"]:
         db.session.add(Movie(id=movie["pk"],
                              title=movie["title"],
@@ -38,11 +48,3 @@ with app.app_context():
     except IntegrityError:
         print("Fixtures already loaded")
 
-with app.app_context():
-    for director in data["directors"]:
-        db.session.add(Director(id=director["pk"], name=director["name"]))
-
-    try:
-        db.session.commit()
-    except IntegrityError:
-        print("Fixtures already loaded")
